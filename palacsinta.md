@@ -1,6 +1,6 @@
 # Heading 1
 - Só
 - Cukor
-- Karob
+- Karob / Csoki
 - Liszt
 ## Heading 2
