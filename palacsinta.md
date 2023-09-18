@@ -1,6 +1,6 @@
 # Heading 1
 - Só
 - Cukor
-- Kakaó
+- Csoki
 - Liszt
 ## Heading 2
