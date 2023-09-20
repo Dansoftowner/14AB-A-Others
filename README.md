@@ -1,6 +1,6 @@
-# 14AB-A-Others
-:)
-# Névsor:
+# Plander
+[A dokumentáció itt található](https://github.com/Dansoftowner/14AB-A-plander-docs)
+# Csapattagok:
 - Fehér Szabolcs
-- Györfy Dániel
+- Györffy Dániel
 - Kubik Ármin
