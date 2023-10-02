@@ -1,0 +1,1 @@
+- [Use Number or ObjectId when storing a reference to another document using Mongoose? ](https://stackoverflow.com/questions/44147927/use-number-or-objectid-when-storing-a-reference-to-another-document-using-mongoo)
