@@ -1,5 +1,7 @@
-# Plander
-[A dokumentáció itt található](https://github.com/Dansoftowner/14AB-A-plander-docs)
+# Plander - Others
+Itt találhatóak ideiglenes jegyzetek és segédanyagok.
+### Kapcsolódó repository-k
+- [plander-docs](https://github.com/Dansoftowner/14AB-A-plander-docs) - útmutatások fejlesztőknek
 # Csapattagok:
 - Fehér Szabolcs
 - Györffy Dániel
