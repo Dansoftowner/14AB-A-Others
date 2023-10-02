@@ -1,1 +1,6 @@
 https://medium.com/kocfinanstech/socket-io-with-node-js-express-5cc75aa67cae
+https://stackoverflow.com/questions/61123198/how-to-send-push-notification-using-socketio-to-a-android-device-when-it-will-re
+https://redis.io/
+https://stackoverflow.com/questions/54327286/is-mongo-db-better-than-mysql-db-for-notification-storage-and-retrieval
+https://www.quora.com/Is-it-better-to-store-notifications-of-all-users-under-one-collection-table-OR-rather-provide-each-user-his-own-collection-table-to-store-notifications
+https://www.mongodb.com/docs/manual/indexes/
