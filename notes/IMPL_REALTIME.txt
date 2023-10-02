@@ -4,3 +4,4 @@ https://redis.io/
 https://stackoverflow.com/questions/54327286/is-mongo-db-better-than-mysql-db-for-notification-storage-and-retrieval
 https://www.quora.com/Is-it-better-to-store-notifications-of-all-users-under-one-collection-table-OR-rather-provide-each-user-his-own-collection-table-to-store-notifications
 https://www.mongodb.com/docs/manual/indexes/
+https://www.mongodb.com/docs/manual/core/timeseries/timeseries-automatic-removal/
