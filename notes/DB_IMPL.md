@@ -1,1 +1,2 @@
 - [Use Number or ObjectId when storing a reference to another document using Mongoose? ](https://stackoverflow.com/questions/44147927/use-number-or-objectid-when-storing-a-reference-to-another-document-using-mongoo)
+- [Export database from MongoDb atlas to the local machine Monogo compass](https://stackoverflow.com/questions/59770288/export-database-from-mongodb-atlas-to-the-local-machine-monogo-compass)
