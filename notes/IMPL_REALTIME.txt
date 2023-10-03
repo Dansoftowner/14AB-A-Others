@@ -5,3 +5,5 @@ https://stackoverflow.com/questions/54327286/is-mongo-db-better-than-mysql-db-fo
 https://www.quora.com/Is-it-better-to-store-notifications-of-all-users-under-one-collection-table-OR-rather-provide-each-user-his-own-collection-table-to-store-notifications
 https://www.mongodb.com/docs/manual/indexes/
 https://www.mongodb.com/docs/manual/core/timeseries/timeseries-automatic-removal/
+https://tonisucic.medium.com/pitfalls-to-avoid-when-implementing-push-notifications-784965f078ab
+https://tannguyenit95.medium.com/designing-a-notification-system-1da83ca971bc
