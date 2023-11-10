@@ -19,3 +19,4 @@
   --action-yellow: #FDE74C; 
 }
 ```
+![Color shade](/UI_design/src/colorshades.png)
