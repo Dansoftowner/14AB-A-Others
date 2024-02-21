@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="plander" id="Project-204f" database="MongoDb" >
 	<schema name="plander" >
+		<table name="assignments" prior="duties" >
+			<comment><![CDATA[Beosztások]]></comment>
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="title" prior="eventName" type="string" jt="12" >
+				<comment><![CDATA[Ha a szolgálat valamilyen esemény köré épül, annak a nevét tartalmazza.]]></comment>
+			</column>
+			<column name="location" type="string" jt="12" >
+				<comment><![CDATA[Helyszín]]></comment>
+			</column>
+			<column name="association" prior="associationId" type="int" jt="4" mandatory="y" >
+				<comment><![CDATA[Egyesület azonosítója]]></comment>
+			</column>
+			<column name="start" prior="startDateTime" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[A szolgálat kezdési ideje]]></comment>
+			</column>
+			<column name="end" prior="endDateTime" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[A szolgálat végének ideje.]]></comment>
+			</column>
+			<column name="assignees" prior="subordinates" type="array[object]" jt="4999545" mandatory="y" >
+				<comment><![CDATA[A beosztott tagok azonosítói]]></comment>
+			</column>
+			<column name="report" type="objectId" jt="-8" >
+				<comment><![CDATA[A szolgálathoz tartozó jelentés azonosítója]]></comment>
+			</column>
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<index name="unq_assignments" unique="UNIQUE_KEY" >
+				<column name="report" />
+			</index>
+			<fk name="fk_duties_associations" virtual="y" to_schema="plander" to_table="associations" >
+				<fk_column name="association" pk="_id" />
+			</fk>
+			<fk name="fk_duties_members" virtual="y" to_schema="plander" to_table="members" >
+				<fk_column name="assignees" pk="_id" />
+			</fk>
+			<fk name="fk_assignments_reports" virtual="y" to_schema="plander" to_table="reports" >
+				<fk_column name="report" pk="_id" />
+			</fk>
+		</table>
 		<table name="associations" prior="Collection" >
 			<comment><![CDATA[Egyesületek]]></comment>
 			<column name="_id" type="objectId" jt="-8" mandatory="y" />
@@ -8,58 +48,61 @@
 			<column name="location" type="string" jt="12" mandatory="y" >
 				<comment><![CDATA[Település]]></comment>
 			</column>
-			<column name="officialIdentifier" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[OPSZ azonosító: a polgárőr-igazolványszám]]></comment>
+			<column name="certificate" prior="officialIdentifier" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[OPSZ azonosító]]></comment>
 			</column>
 			<index name="_id_" unique="PRIMARY_KEY" >
 				<column name="_id" />
+			</index>
+			<index name="unq_associations" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+			<index name="unq_associations_0" unique="UNIQUE_KEY" >
+				<column name="certificate" />
 			</index>
 		</table>
-		<table name="duties" prior="Collection" >
-			<comment><![CDATA[Beosztások]]></comment>
+		<table name="chatMessages" prior="messages" >
+			<comment><![CDATA[Az üzenőfal (chat) mentett bejegyzései.]]></comment>
 			<column name="_id" type="objectId" jt="-8" mandatory="y" />
-			<column name="eventName" type="string" jt="12" >
-				<comment><![CDATA[Ha a szolgálat valamilyen esemény köré épül, annak a nevét tartalmazza.]]></comment>
+			<column name="association" prior="associationId" type="objectId" jt="-8" mandatory="y" >
+				<comment><![CDATA[Az egyesület azonosítója.]]></comment>
 			</column>
-			<column name="location" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[Helyszín]]></comment>
+			<column name="sender" prior="senderId" type="object" jt="4999544" mandatory="y" >
+				<comment><![CDATA[Üzenetet küldő tag adatai (_id és name).]]></comment>
 			</column>
-			<column name="associationId" type="int" jt="4" mandatory="y" >
-				<comment><![CDATA[Egyesület azonosítója]]></comment>
+			<column name="timestamp" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[Küldés ideje]]></comment>
 			</column>
-			<column name="startDateTime" type="date" jt="91" mandatory="y" >
-				<comment><![CDATA[A szolgálat kezdési ideje]]></comment>
-			</column>
-			<column name="endDateTime" type="date" jt="91" mandatory="y" >
-				<comment><![CDATA[A szolgálat végének ideje.]]></comment>
-			</column>
-			<column name="subordinates" type="array[objectId]" jt="1111" mandatory="y" >
-				<comment><![CDATA[A beosztott tagok azonosítói]]></comment>
+			<column name="content" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[Az üzenet tartalma.]]></comment>
 			</column>
 			<index name="_id_" unique="PRIMARY_KEY" >
 				<column name="_id" />
 			</index>
-			<fk name="fk_duties_associations" virtual="y" to_schema="plander" to_table="associations" >
-				<fk_column name="associationId" pk="_id" />
+			<fk name="fk_messages_associations" virtual="y" to_schema="plander" to_table="associations" >
+				<fk_column name="association" pk="_id" />
 			</fk>
-			<fk name="fk_duties_members" virtual="y" to_schema="plander" to_table="members" >
-				<fk_column name="subordinates" pk="_id" />
+			<fk name="fk_messages_members" virtual="y" to_schema="plander" to_table="members" >
+				<fk_column name="sender" pk="_id" />
 			</fk>
 		</table>
 		<table name="members" prior="membert" >
 			<comment><![CDATA[Tagok]]></comment>
 			<column name="_id" type="objectId" jt="-8" mandatory="y" />
-			<column name="associationId" type="objectId" jt="-8" mandatory="y" >
+			<column name="isRegistered" type="bool" jt="16" mandatory="y" >
+				<comment><![CDATA[Értéke true, ha a tag felregisztrált, false ha csak meg van hívva de megerősítetlen állapotban van.]]></comment>
+			</column>
+			<column name="association" prior="associationId" type="objectId" jt="-8" mandatory="y" >
 				<comment><![CDATA[Egyesület azonosítója]]></comment>
 			</column>
+			<column name="email" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[A tag email-címe.]]></comment>
+			</column>
 			<column name="username" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[A tag felhasználó neve. Ezt kell használja a bejelentkezéshez.]]></comment>
+				<comment><![CDATA[A tag felhasználó neve. Egyesületen belül egyedi.]]></comment>
 			</column>
-			<column name="passwordHash" type="string" jt="12" mandatory="y" >
+			<column name="password" prior="passwordHash" type="string" jt="12" mandatory="y" >
 				<comment><![CDATA[A tag felhasználói fiókjához tartozó jelszava titkosított formában.]]></comment>
-			</column>
-			<column name="officialIdentifier" type="int" jt="4" >
-				<comment><![CDATA[A tag OPSZ igazolványszáma. A megadása nem kötelező, mivel a tag a felvételkor még nem biztos, hogy rendelkezik igazolványszámmal.]]></comment>
 			</column>
 			<column name="name" type="string" jt="12" mandatory="y" >
 				<comment><![CDATA[A tag neve.]]></comment>
@@ -70,17 +113,17 @@
 			<column name="idNumber" type="int" jt="4" mandatory="y" >
 				<comment><![CDATA[A tag személyi igazolvány száma.]]></comment>
 			</column>
-			<column name="email" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[A tag email-címe.]]></comment>
-			</column>
 			<column name="phoneNumber" type="string" jt="12" mandatory="y" >
 				<comment><![CDATA[A tag telefonszáma.]]></comment>
+			</column>
+			<column name="guardNumber" prior="officialIdentifier" type="string" jt="12" >
+				<comment><![CDATA[A tag OPSZ igazolványszáma. A megadása nem kötelező, mivel a tag a felvételkor még nem biztos, hogy rendelkezik igazolványszámmal.]]></comment>
 			</column>
 			<column name="roles" type="array[string]" jt="2003" mandatory="y" >
 				<defo><![CDATA[["member"]]]></defo>
 				<comment><![CDATA[A tag jogosultságait tartalmazó vektor. 
 A "member" az "egyszerű" tag,
-a "manager" az egyesületvezető.]]></comment>
+a "president" az egyesületvezető.]]></comment>
 			</column>
 			<column name="preferences" type="object" jt="4999544" >
 				<comment><![CDATA[A tag általános beállításait tartalmazó objektum.
@@ -90,41 +133,49 @@ Ennek a beágyazott objektumnak az attribútumait nem lehet előre megjósolni.]
 				<column name="_id" />
 			</index>
 			<fk name="belongs_to" virtual="y" to_schema="plander" to_table="associations" >
-				<fk_column name="associationId" pk="_id" />
+				<fk_column name="association" pk="_id" />
 			</fk>
 		</table>
-		<table name="messages" prior="Collection" >
-			<comment><![CDATA[Az üzenőfal (chat) mentett bejegyzései.]]></comment>
+		<table name="registrationTokens" prior="registrationToken" >
 			<column name="_id" type="objectId" jt="-8" mandatory="y" />
-			<column name="associationId" type="objectId" jt="-8" mandatory="y" >
-				<comment><![CDATA[Az egyesület azonosítója.]]></comment>
+			<column name="memberId" type="objectId" jt="-8" mandatory="y" />
+			<column name="token" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[A random generált token string.
+Hash-elt formában van tárolva (BCrypt hash).]]></comment>
 			</column>
-			<column name="senderId" type="objectId" jt="-8" mandatory="y" >
-				<comment><![CDATA[Üzenetet küldő tag azonosítója.]]></comment>
+			<column name="createdAt" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[Token létrehozásának ideje. Arra szükséges, hogy a regisztrációs token bizonyos időtartam után (72 óra) kitörlődjön az adatbázisból egy TTL index segítségével.]]></comment>
 			</column>
-			<column name="timestamp" type="timestamp" jt="93" mandatory="y" >
-				<comment><![CDATA[Küldés ideje]]></comment>
-			</column>
-			<column name="content" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[Az üzenet tartalma.]]></comment>
-			</column>
+			<index name="idx_registrationTokens" unique="NORMAL" >
+				<comment><![CDATA[TTL index, ahhoz, hogy a regisztrációs token bizonyos időtartam után (72 óra) kitörlődjön az adatbázisból]]></comment>
+				<column name="createdAt" />
+			</index>
 			<index name="_id_" unique="PRIMARY_KEY" >
 				<column name="_id" />
 			</index>
-			<fk name="fk_messages_associations" virtual="y" to_schema="plander" to_table="associations" >
-				<fk_column name="associationId" pk="_id" />
-			</fk>
-			<fk name="fk_messages_members" virtual="y" to_schema="plander" to_table="members" >
-				<fk_column name="senderId" pk="_id" />
+			<index name="unq_registrationTokens" unique="UNIQUE_KEY" >
+				<column name="memberId" />
+			</index>
+			<fk name="fk_registrationtokens_members" virtual="y" to_schema="plander" to_table="members" >
+				<fk_column name="memberId" pk="_id" />
 			</fk>
 		</table>
 		<table name="reports" prior="Reports" >
 			<column name="_id" type="objectId" jt="-8" mandatory="y" />
-			<column name="dutyId" type="objectId" jt="-8" mandatory="y" >
-				<comment><![CDATA[A beosztás azonosítója.]]></comment>
+			<column name="author" type="objectId" jt="-8" mandatory="y" >
+				<comment><![CDATA[A jelentés készítőjének azonosítója]]></comment>
 			</column>
 			<column name="method" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[A szolgálat módja [gépkocsi/kerékpár/gyalogos]]]></comment>
+				<comment><![CDATA[A szolgálat módja. Lehetséges értékek: vehicle (Gépkocsi), bicycle (Kerékpár), pedestrian (Gyalogos).]]></comment>
+			</column>
+			<column name="purpose" prior="target" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[A szolgálat célja. Például: 
+- Jelző-figyelő járőrözés
+- Rendezvénybiztosítás
+- Iskolaszolgálat
+- Gépjárműfelderítés
+- Postáskísérés
+- stb.]]></comment>
 			</column>
 			<column name="licensePlateNumber" type="string" jt="12" >
 				<comment><![CDATA[A szolgálatot ellátó gépkocsi rendszáma. Értelemszerűen csak akkor releváns, ha a szolgálat módja 'gépkocsi'.]]></comment>
@@ -135,50 +186,61 @@ Ennek a beágyazott objektumnak az attribútumait nem lehet előre megjósolni.]
 			<column name="endKm" type="int" jt="4" >
 				<comment><![CDATA[A km óra állása érkezéskor. Értelemszerűen csak akkor releváns, ha a szolgálat módja 'gépkocsi'.]]></comment>
 			</column>
-			<column name="independent" type="bool" jt="16" mandatory="y" >
-				<comment><![CDATA[Szolgálat típusa. Ha önálló (csak a polgárőrség játszik szerepet), akkor true értéket vesz fel, ha együttműködés volt más szervvel, akkor false.]]></comment>
-			</column>
 			<column name="externalOrganization" type="string" jt="12" >
 				<comment><![CDATA[Külső szerv neve [közös szolgálat esetén]]]></comment>
 			</column>
 			<column name="externalRepresentative" type="string" jt="12" >
 				<comment><![CDATA[Külső szerv képviselője  [közös szolgálat esetén]]]></comment>
 			</column>
-			<column name="target" type="string" jt="12" mandatory="y" >
-				<comment><![CDATA[A szolgálat célja. Például: 
-- Jelző-figyelő járőrözés
-- Rendezvénybiztosítás
-- Iskolaszolgálat
-- Gépjárműfelderítés
-- Postáskísérés
-- stb.]]></comment>
-			</column>
 			<column name="description" type="string" jt="12" >
 				<comment><![CDATA[Rövid leírás, ha történt valamilyen rendkívüli esemény.]]></comment>
 			</column>
-			<column name="imageUrls" type="array[string]" jt="2003" >
-				<comment><![CDATA[A fényképek elérési útjai.]]></comment>
+			<column name="submittedAt" type="date" jt="91" >
+				<comment><![CDATA[Jelentés elküldésének ideje]]></comment>
 			</column>
 			<index name="_id_" unique="PRIMARY_KEY" >
 				<column name="_id" />
 			</index>
-			<fk name="fk_reports_duties" virtual="y" to_schema="plander" to_table="duties" >
-				<fk_column name="dutyId" pk="_id" />
+			<fk name="fk_reports_messages" virtual="y" to_schema="plander" to_table="members" >
+				<fk_column name="author" pk="_id" />
+			</fk>
+		</table>
+		<table name="restorationTokens" prior="restorationToken" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="memberId" type="objectId" jt="-8" mandatory="y" />
+			<column name="token" type="string" jt="12" mandatory="y" >
+				<comment><![CDATA[A random generált token string.
+Hash-elt formában van tárolva (BCrypt hash).]]></comment>
+			</column>
+			<column name="createdAt" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[Token létrehozásának ideje. Arra szükséges, hogy a helyreállítási token bizonyos időtartam után (24 óra) kitörlődjön az adatbázisból egy TTL index segítségével.]]></comment>
+			</column>
+			<index name="idx_registrationTokens_0" unique="NORMAL" >
+				<comment><![CDATA[TTL index, ahhoz, hogy a helyreállítási token bizonyos időtartam után (24óra) kitörlődjön az adatbázisból]]></comment>
+				<column name="createdAt" />
+			</index>
+			<index name="_id_0" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<index name="unq_restorationTokens" unique="UNIQUE_KEY" >
+				<column name="memberId" />
+			</index>
+			<fk name="fk_registrationtokens_members_0" virtual="y" to_schema="plander" to_table="members" >
+				<fk_column name="memberId" pk="_id" />
 			</fk>
 		</table>
 		<view name="v" >
 			<view_script><![CDATA[db.createView('viewName','viewOn',[])]]></view_script>
 		</view>
 	</schema>
-	<layout name="Default Layout" id="Layout-2071" joined_routing="y" show_column_type="y" show_page_borders="y" show_relation="columns" >
+	<layout name="Default Layout" id="Layout-2071" joined_routing="y" show_column_type="y" show_relation="cascade" >
 		<comment><![CDATA[Plander]]></comment>
-		<entity schema="plander" name="associations" color="C1D8EE" x="368" y="48" />
-		<entity schema="plander" name="duties" color="C1D8EE" x="48" y="64" />
-		<entity schema="plander" name="members" color="0078D7" x="432" y="272" />
-		<entity schema="plander" name="messages" color="C1D8EE" x="640" y="48" />
-		<entity schema="plander" name="reports" color="C1D8EE" x="64" y="272" />
-		<query id="Query-cb7" name="fk_duties_members" >
-			<query_table schema="plander" name="duties" alias="duties" x="256" y="48" />
-		</query>
+		<entity schema="plander" name="assignments" color="C1D8EE" x="48" y="80" />
+		<entity schema="plander" name="associations" color="C1D8EE" x="240" y="80" />
+		<entity schema="plander" name="chatMessages" color="C1D8EE" x="416" y="448" />
+		<entity schema="plander" name="members" color="0078D7" x="416" y="48" />
+		<entity schema="plander" name="registrationTokens" color="3986C1" x="688" y="224" />
+		<entity schema="plander" name="reports" color="C1D8EE" x="48" y="352" />
+		<entity schema="plander" name="restorationTokens" color="3986C1" x="688" y="96" />
 	</layout>
 </project>
